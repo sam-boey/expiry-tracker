@@ -42,23 +42,60 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jsx');
 app.engine('jsx', reactEngine);
 
+
+
+
+/**
+ * ===================================
+ * Function Declarations
+ * ===================================
+ */
+
+homeCallback = (request, response) => {
+    const queryString = 'SELECT * from items'
+
+    pool.query(queryString, (err, result) => {
+
+        if (err) {
+            console.error('query error:', err.stack);
+            response.send( 'query error' );
+        } else {
+            console.log('query result:', result);
+
+            // redirect to home page
+            let data = {
+                items: result.rows
+            }
+
+            response.render('home', data);
+        };
+    })
+}
+
+
+
+
 /**
  * ===================================
  * Routes
  * ===================================
  */
 
-app.get('/', (request, response) => {
-  // query database for all pokemon
+// app.get('/', (request, response) => {
+//   // query database for all pokemon
 
-  // respond with HTML page displaying all pokemon
-  response.render('home');
-});
+//   // respond with HTML page displaying all pokemon
+//   response.render('home');
+// });
 
-app.get('/new', (request, response) => {
-  // respond with HTML page with form to create new pokemon
-  response.render('new');
-});
+// app.get('/new', (request, response) => {
+//   // respond with HTML page with form to create new pokemon
+//   response.send('new');
+// });
+
+
+app.get('/', homeCallback);
+
 
 
 /**
