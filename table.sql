@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS items (
    id SERIAL PRIMARY KEY,
    name TEXT,
-   ed TIMESTAMP,
+   ed DATE,
    picture TEXT
 );
