@@ -186,10 +186,6 @@ app.get ('/exptrack/edit-item/:id' , (request ,response) => {
 app.put('/exptrack/edit-item/:id' , ( request,response) => {
         let id = request.params.id;
         var newItem = request.body;
-        let now = moment().format('LL');
-        let expiryDate = moment(newItem.ed).format('LL')
-               now = Date.parse(now);
-        expiryDate = Date.parse(newItem.ed);
 
         // query string to input values to table
         const queryString = 'UPDATE items SET name= $1, ed =$2, picture=$3 WHERE id = $4';
