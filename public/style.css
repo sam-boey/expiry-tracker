@@ -1,0 +1,7 @@
+.items{
+	background-color:pink;
+	margin:10px;
+	width:30%;
+	overflow:hidden;
+	display:inline-block;
+}

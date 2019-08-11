@@ -4,7 +4,11 @@ const express = require('express');
 const methodOverride = require('method-override');
 const pg = require('pg');
 
-var moment = require('moment');
+const moment = require('moment');
+
+const sha256 = require('js-sha256');
+const SALT = "NO MORE EXPIRED FOOD";
+
 
 // Initialise postgres client
 const configs = {
@@ -29,7 +33,7 @@ pool.on('error', function (err) {
 // Init express app
 const app = express();
 
-
+app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
@@ -54,6 +58,12 @@ app.engine('jsx', reactEngine);
  */
 
 homeCallback = (request, response) => {
+    if (sha256("you are in" + request.cookies["User"] + SALT) === request.cookies["loggedin"]){
+        var cookieLogin = (sha256("you are in" + request.cookies["User"] + SALT) === request.cookies["loggedin"]) ? true : false;
+        var cookieUserId = request.cookies['User'];
+        console.log("get cookies user id: "+ cookieUserId);
+        //console.log(response.body);
+
     const queryString = 'SELECT * from items ORDER BY ed ASC';
 
     pool.query(queryString, (err, result) => {
@@ -72,6 +82,7 @@ homeCallback = (request, response) => {
             response.render('home', data);
         };
     })
+};
 }
 
 
@@ -86,11 +97,11 @@ homeCallback = (request, response) => {
 
 //Redirect to home page
 app.get('/', (request,response) => {
-    response.redirect('/exptrack');
+    response.redirect('/exptrack/home');
 });
 
 //Home page
-app.get('/exptrack', homeCallback);
+app.get('/exptrack/home', homeCallback);
 
 //Add items page
 app.get ('/exptrack/add-item' , (request ,response) => {
@@ -101,8 +112,6 @@ app.get ('/exptrack/add-item' , (request ,response) => {
 app.post('/exptrack/add-item' , ( request,response) => {
     var newItem = request.body;
     console.log(newItem);
-    let now= moment().format('L');
-    console.log(now)
 
         const queryString = 'INSERT INTO items (name ,ed , picture ) VALUES ( $1, $2, $3)';
         let values = [newItem.name, newItem.ed, newItem.picture];
@@ -115,7 +124,7 @@ app.post('/exptrack/add-item' , ( request,response) => {
                     console.log('query result:', result);
                     // response.send( "New item has been created!" );
                     //redirecting to home page after adding item
-                    response.redirect('/exptrack');
+                    response.redirect('/exptrack/home');
                   }
         });
 });
@@ -156,7 +165,7 @@ app.delete('/exptrack/delete-item/:id', (request, response) => {
                     response.send( 'query error' );
                   } else {
                     console.log('query result:', result);
-                    response.redirect('/exptrack');
+                    response.redirect('/exptrack/home');
                     }
             });
 });
@@ -197,10 +206,52 @@ app.put('/exptrack/edit-item/:id' , ( request,response) => {
                     response.send( 'query error' );
                   } else {
                     console.log('query result:', result);
-                    response.redirect('/exptrack');
+                    response.redirect('/exptrack/home');
                     }
             });
     });
+
+Logout
+app.get('/exptrack/logout', (request, response) => {
+    response.clearCookie('loggedin');
+    response.clearCookie('User');
+    response.redirect('/exptrack');
+});
+
+//Register
+app.get('/exptrack/register', (request, response) => {
+    response.render('register');
+});
+
+//Registering user POST
+app.post('/exptrack/register', (request, response) => {
+    // hash the password
+    let hashedPassword = sha256( request.body.password + SALT );
+
+    const queryString = "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *";
+
+    const values = [request.body.username, hashedPassword];
+
+    pool.query(queryString, values, (err, res) => {
+        if (err) {
+            console.log("query error", err.message);
+        } else {
+            console.log("YAY");
+            // console.log(res.rows[0] );
+
+            let hashedLogin = sha256("you are in" + res.rows[0].id + SALT);
+
+
+            // check to see if err is null
+
+            // they have successfully registered, log them in
+            response.cookie('loggedin', hashedLogin);
+            response.cookie('User', res.rows[0].id);
+            // response.send('worked');
+            response.redirect('/exptrack/home' + res.rows[0].id);
+        }
+    });
+});
 
 
 
