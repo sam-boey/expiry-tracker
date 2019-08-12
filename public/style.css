@@ -1,7 +1,22 @@
 .items{
-	background-color:pink;
+	background-color:white;
 	margin:10px;
 	width:30%;
 	overflow:hidden;
 	display:inline-block;
+	justify-content: center;
+}
+
+.buttonsCol {
+	margin:30px;
+}
+
+.submitBtn {
+	margin-top: 20px;
+}
+
+.loginTitle {
+	justify-content: center;
+	display:flex;
+	padding-bottom:20px;
 }
