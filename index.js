@@ -40,7 +40,7 @@ if( process.env.DATABASE_URL ){
       user: 'sam',
       host: '127.0.0.1',
       database: 'exp_tracker',
-      port: 3000
+      port: 5432
   };
 }
 
