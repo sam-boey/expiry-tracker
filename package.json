@@ -20,7 +20,7 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
   },
-    "engines" : {
+  "engines" : {
     "node" : "^12.8.0"
-  },
+  }
 }
