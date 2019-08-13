@@ -36,10 +36,10 @@ class New extends React.Component {
                 </div>
               </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
+            <div class="form-inline my-2 my-lg-0">
              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Profile</button>
               <a href="/exptrack/logout"> <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >Logout</button> </a>
-            </form>
+            </div>
           </div>
         </nav>
           <div>
