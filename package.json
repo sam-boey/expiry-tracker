@@ -4,7 +4,8 @@
   "description": "Expiry tracker for food items.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "Sam",
   "license": "ISC",
@@ -18,5 +19,8 @@
     "pg": "^7.4.3",
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
-  }
+  },
+    "engines" : {
+    "node" : "^12.8.0"
+  },
 }

@@ -75,7 +75,7 @@ homeCallback = (request, response) => {
                 console.error('query error:', err.stack);
                 response.send('query error');
             } else {
-                console.log('query result:', result);
+                // console.log('query result:', result);
                 let data = {
                     items: result.rows || []
                 }
@@ -262,7 +262,7 @@ app.get('/exptrack/edit-item/:id', (request, response) => {
     if (sha256("you are in" + request.cookies["User"] + SALT) === request.cookies["loggedin"]) {
         let cookieLogin = (sha256("you are in" + request.cookies["User"] + SALT) === request.cookies["loggedin"]) ? true : false;
         let cookieUserId = request.cookies['User'];
-        let anyLogData = false;
+        let anylogdata = false;
         let id = parseInt(request.params.id);
         const queryString = 'SELECT * FROM items WHERE id= $1';
         let value = [id];
@@ -296,12 +296,14 @@ app.put('/exptrack/edit-item/:id', (request, response) => {
     if (sha256("you are in" + request.cookies["User"] + SALT) === request.cookies["loggedin"]) {
         let id = parseInt(request.params.id);
         var newItem = request.body;
+        console.log("newItem", newItem);
 
         // query string to input values to table
         const queryString = 'UPDATE items SET name= $1, ed =$2, picture=$3 WHERE id = $4';
-        let values = [newItem.name, newItem.ed, newItem.picture, newItem.id];
+        let values = [newItem.name, newItem.ed, newItem.picture, id];
+        console.log("gonna save edit");
         pool.query(queryString, values, (err, result) => {
-
+            console.log(err);
             if (err) {
                 console.error('query error:', err.stack);
                 response.send('query error');
