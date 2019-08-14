@@ -1,3 +1,6 @@
+# Expiry Tracker
+No more wasted food.
+
 ##Objective
 This app aims to help users keep track of their perishable grocceries within the house and alerting users when it is gonna expire.
 
